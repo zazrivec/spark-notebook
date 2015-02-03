@@ -1,3 +1,5 @@
+// to be adapted for spark 0.9.1
+/*
 package org.apache.spark.ui.notebook.front.widgets
 
 import scala.concurrent._
@@ -18,7 +20,7 @@ import notebook.front.widgets._
 class SparkInfo(sparkContext:SparkContext, checkInterval:Duration=5 seconds, execNumber:Option[Int]=None) extends SingleConnector[JsValue] with Widget {
   implicit val codec:Codec[JsValue, JsValue] = JsonCodec.idCodec[JsValue]
 
-  val listener = new org.apache.spark.ui.jobs.JobProgressListener(sparkContext.getConf)
+  val listener = new org.apache.spark.ui.jobs.JobProgressListener(sparkContext)
 
   sparkContext.listenerBus.addListener(listener)
 
@@ -139,5 +141,5 @@ class SparkInfo(sparkContext:SparkContext, checkInterval:Duration=5 seconds, exe
         <hr/>
       </div>
 
-
 }
+*/

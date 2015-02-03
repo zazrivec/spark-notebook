@@ -22,7 +22,7 @@ object Shared {
       val libs = Seq(
         guava,
         sparkRepl(sv),
-        sparkSQL(sv),
+        // not in 0.9.x → sparkSQL(sv),
         hadoopClient(hv),
         jets3t(jv)
       )

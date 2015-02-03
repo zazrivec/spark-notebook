@@ -1,3 +1,5 @@
+// not in spark 0.9.1
+/*
 package notebook.front.widgets
 
 import scala.util._
@@ -15,8 +17,8 @@ import JsonCodec._
 
 import notebook.front._
 
-class Sql(sqlContext:SQLContext, call: String) extends Widget {
 
+class Sql(sqlContext:SQLContext, call: String) extends Widget {
   private[this] val sqlInputRegex = "(\\{[^\\}]+\\})".r
   private[this] val sqlTypedInputRegex = "^\\{([^:]+):(.*)\\}$".r
 
@@ -220,3 +222,4 @@ object TypedInput {
     case "Double"  => DoubleInput(name)
   }
 }
+*/ 

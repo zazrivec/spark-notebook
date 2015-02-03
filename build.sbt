@@ -18,7 +18,7 @@ dockerRepository := Some("andypetrella") //Docker
 
 packageName in Docker := "spark-notebook"
 
-scalaVersion := "2.10.4"
+scalaVersion := "2.10.3"
 
 ivyScala := ivyScala.value map { _.copy(overrideScalaVersion = true) }
 

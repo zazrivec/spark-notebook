@@ -22,7 +22,7 @@ import org.apache.spark.repl.SparkILoop
 
 def reset(appName:String="Notebook", lastChanges:(SparkConf=>Unit)=(_:SparkConf)=>()):Unit = {
   conf = new SparkConf()
-  conf.setMaster(sparkMaster.getOrElse("local[*]"))
+  conf.setMaster(sparkMaster.getOrElse("local"))
       .setAppName(appName)
       .set("spark.repl.class.uri", uri)
 
