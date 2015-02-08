@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=640">
+
+    <link rel="stylesheet" href="stylesheets/core.css" media="screen">
+    <link rel="stylesheet" href="stylesheets/mobile.css" media="handheld, only screen and (max-device-width:640px)">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+
+    <script type="text/javascript" src="javascripts/modernizr.js"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script type="text/javascript" src="javascripts/headsmart.min.js"></script>
+    <script type="text/javascript">
+      $(document).ready(function () {
+        $('#main_content').headsmart()
+      })
+    </script>
+    <title>Spark Notebook by andypetrella</title>
+  </head>
+
+  <body>
+    <a id="forkme_banner" href="https://github.com/andypetrella/spark-notebook">View on GitHub</a>
+    <div class="shell">
+
+      <header>
+        <span class="ribbon-outer">
+          <span class="ribbon-inner">
+            <h1>Spark Notebook</h1>
+            <h2>Use Apache Spark straight from the Browser</h2>
+          </span>
+          <span class="left-tail"></span>
+          <span class="right-tail"></span>
+        </span>
+      </header>
+
+      <section id="downloads">
+        <span class="inner">
+          <a href="https://github.com/andypetrella/spark-notebook/zipball/master" class="zip"><em>download</em> .ZIP</a><a href="https://github.com/andypetrella/spark-notebook/tarball/master" class="tgz"><em>download</em> .TGZ</a>
+        </span>
+      </section>
+
+
+      <span class="banner-fix"></span>
+
+
+      <section id="main_content">
+        <h1>
+<a id="spark-notebook" class="anchor" href="#spark-notebook" aria-hidden="true"><span class="octicon octicon-link"></span></a>Spark Notebook</h1>
+
+<p><a href="https://gitter.im/andypetrella/spark-notebook?utm_source=badge&amp;utm_medium=badge&amp;utm_campaign=pr-badge&amp;utm_content=badge"><img src="https://badges.gitter.im/Join%20Chat.svg" alt="Gitter"></a></p>
+
+<p><em>Fork of the amazing <a href="https://github.com/Bridgewater/scala-notebook">scala-notebook</a>, yet focusing on Massive Dataset Analysis using <a href="http://spark.apache.org">Apache Spark</a>.</em></p>
+
+
+
+<ul>
+<li>
+<a href="#description">Description</a>
+
+<ul>
+<li><a href="#discussions">Discussions</a></li>
+<li>
+<a href="#mailing-list">Mailing list</a>
+
+<ul>
+<li><a href="#spark-notebook-dev">Spark Notebook Dev</a></li>
+<li><a href="#spark-notebook-user">Spark Notebook User</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<a href="#launch">Launch</a>
+
+<ul>
+<li>
+<a href="#using-a-release">Using a release</a>
+
+<ul>
+<li><a href="#requirements">Requirements</a></li>
+<li><a href="#zip">ZIP</a></li>
+<li><a href="#docker">Docker</a></li>
+<li><a href="#boot2docker-mac-os-x">boot2docker (Mac OS X)</a></li>
+<li><a href="#deb">DEB</a></li>
+</ul>
+</li>
+<li>
+<a href="#from-the-sources">From the sources</a>
+
+<ul>
+<li><a href="#procedure">Procedure</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#use">Use</a></li>
+<li>
+<a href="#features">Features</a>
+
+<ul>
+<li><a href="#usereconfigure-spark">Use/Reconfigure Spark</a></li>
+<li><a href="#use-the-form">Use the <code>form</code></a></li>
+<li><a href="#the-reset-function">The <code>reset</code> function</a></li>
+<li><a href="#keep-an-eye-on-your-tasks">Keep an eye on your tasks</a></li>
+<li>
+<a href="#using-sparksql">Using (Spark)SQL</a>
+
+<ul>
+<li><a href="#static-sql">Static SQL</a></li>
+<li><a href="#dynamic-sql">Dynamic SQL</a></li>
+<li><a href="#show-case">Show case</a></li>
+</ul>
+</li>
+<li><a href="#interacting-with-javascript">Interacting with JavaScript</a></li>
+<li><a href="#plotting-with-d3">Plotting with D3</a></li>
+<li><a href="#timeseries-with--rickshaw">Timeseries with  Rickshaw</a></li>
+<li><a href="#dynamic-update-of-data-and-plot-using-scalas-future">Dynamic update of data and plot using Scala's <code>Future</code></a></li>
+<li><a href="#update-_notebook_-classpath">Update <em>Notebook</em> <code>ClassPath</code></a></li>
+<li><a href="#update-__spark__-dependencies-sparkjars">Update <strong>Spark</strong> dependencies (<code>spark.jars</code>)</a></li>
+</ul>
+</li>
+<li><a href="#important">IMPORTANT</a></li>
+<li>
+<a href="#known-issues">KNOWN ISSUES</a>
+
+<ul>
+<li><a href="#user-limit-of-inotify-watches-reached"><code>User limit of inotify watches reached</code></a></li>
+</ul>
+</li>
+</ul>
+
+
+
+<h2>
+<a id="description" class="anchor" href="#description" aria-hidden="true"><span class="octicon octicon-link"></span></a>Description</h2>
+
+<p>The main intent of this tool is to create <a href="http://simplystatistics.org/2014/06/06/the-real-reason-reproducible-research-is-important/">reproducible analysis</a> using Scala, Apache Spark and more.</p>
+
+<p>This is achieved through an interactive web-based editor that can combine Scala code, SQL queries, Markup or even JavaScript in a collaborative manner.</p>
+
+<p>The usage of Spark comes out of the box, and is simply enabled by the implicit variable named <code>sparkContext</code>.</p>
+
+<h3>
+<a id="discussions" class="anchor" href="#discussions" aria-hidden="true"><span class="octicon octicon-link"></span></a>Discussions</h3>
+
+<p>C'mon on <a href="https://gitter.im/andypetrella/spark-notebook?utm_source=badge&amp;utm_medium=badge&amp;utm_campaign=pr-badge&amp;utm_content=badge">gitter</a>!</p>
+
+<h3>
+<a id="mailing-list" class="anchor" href="#mailing-list" aria-hidden="true"><span class="octicon octicon-link"></span></a>Mailing list</h3>
+
+<p>There are two different mailing lists, each aiming to specific discussions:</p>
+
+<h4>
+<a id="spark-notebook-dev" class="anchor" href="#spark-notebook-dev" aria-hidden="true"><span class="octicon octicon-link"></span></a>Spark Notebook Dev</h4>
+
+<p>Then <a href="https://groups.google.com/forum/?hl=fr#!forum/spark-notebook-dev">spark-notebook-dev</a> mailing list for all threads regarding implementation, architecture, features and what not related to fix or enhance the project.</p>
+
+<p>Email: <a href="mailto:spark-notebook-dev@googlegroups.com">spark-notebook-dev@googlegroups.com</a>.</p>
+
+<h4>
+<a id="spark-notebook-user" class="anchor" href="#spark-notebook-user" aria-hidden="true"><span class="octicon octicon-link"></span></a>Spark Notebook User</h4>
+
+<p>The <a href="https://groups.google.com/forum/?hl=fr#!forum/spark-notebook-user">spark-notebook-user</a> is for almost everything else than dev, which are questions, bugs, complains, or hopefully some kindness :-D.</p>
+
+<p>Email: <a href="mailto:spark-notebook-user@googlegroups.com">spark-notebook-user@googlegroups.com</a>.</p>
+
+<h2>
+<a id="launch" class="anchor" href="#launch" aria-hidden="true"><span class="octicon octicon-link"></span></a>Launch</h2>
+
+<h3>
+<a id="using-a-release" class="anchor" href="#using-a-release" aria-hidden="true"><span class="octicon octicon-link"></span></a>Using a release</h3>
+
+<p>Long story short, there are several ways to start the spark notebook quickly (even from scratch):</p>
+
+<ul>
+<li>ZIP file</li>
+<li>Docker image</li>
+<li>DEB package</li>
+</ul>
+
+<p>However, there are several flavors for these distributions that depends on the Spark version and Hadoop version you are using.</p>
+
+<h4>
+<a id="requirements" class="anchor" href="#requirements" aria-hidden="true"><span class="octicon octicon-link"></span></a>Requirements</h4>
+
+<ul>
+<li>Make sure you're running at least Java 7 (<code>sudo apt-get install openjdk-7-jdk</code>).</li>
+</ul>
+
+<h4>
+<a id="zip" class="anchor" href="#zip" aria-hidden="true"><span class="octicon octicon-link"></span></a>ZIP</h4>
+
+<p>The zip distributions are publicly available in the bucket: <a href="http://s3.eu-central-1.amazonaws.com/spark-notebook/index.html">s3://spark-notebook</a>.</p>
+
+<p><strong>Checkout</strong> the needed version <a href="http://s3.eu-central-1.amazonaws.com/spark-notebook/index.html">here</a>.</p>
+
+<p>Here is an example how to use it:</p>
+
+<pre><code>wget https://s3.eu-central-1.amazonaws.com/spark-notebook/zip/spark-notebook-0.2.0-spark-1.2.0-hadoop-1.0.4.zip
+unzip spark-notebook-0.2.0-spark-1.2.0-hadoop-1.0.4.zip
+cd spark-notebook-0.2.0-spark-1.2.0-hadoop-1.0.4
+./bin/spark-notebook
+</code></pre>
+
+<h4>
+<a id="docker" class="anchor" href="#docker" aria-hidden="true"><span class="octicon octicon-link"></span></a>Docker</h4>
+
+<p>If you're a Docker user, the following procedure will be even simpler!</p>
+
+<p><strong>Checkout</strong> the needed version <a href="https://registry.hub.docker.com/u/andypetrella/spark-notebook/tags/manage/">here</a>.</p>
+
+<pre><code>docker pull andypetrella/spark-notebook:0.2.0-spark-1.2.0-hadoop-1.0.4
+docker run -p 9000:9000 andypetrella/spark-notebook:0.2.0-spark-1.2.0-hadoop-1.0.4
+</code></pre>
+
+<h4>
+<a id="boot2docker-mac-os-x" class="anchor" href="#boot2docker-mac-os-x" aria-hidden="true"><span class="octicon octicon-link"></span></a>boot2docker (Mac OS X)</h4>
+
+<p>On Mac OS X, you need something like <em>boot2docker</em> to use docker. However, port forwarding needs an extra command necessary for it to work (cf <a href="http://stackoverflow.com/questions/28381903/spark-notebook-not-loading-with-docker">this</a> and <a href="http://stackoverflow.com/questions/21653164/map-ports-so-you-can-access-docker-running-apps-from-osx-host">this</a> SO questions).</p>
+
+<pre><code>VBoxManage modifyvm "boot2docker-vm" --natpf1 "tcp-port9000,tcp,,9000,,9000"
+</code></pre>
+
+<h4>
+<a id="deb" class="anchor" href="#deb" aria-hidden="true"><span class="octicon octicon-link"></span></a>DEB</h4>
+
+<p>Using debian packages is one of the standard, hence the spark notebook is also available in this form (from v0.2.0):</p>
+
+<pre><code>wget https://s3.eu-central-1.amazonaws.com/spark-notebook/deb/spark-notebook-0.2.0-spark-1.2.0-hadoop-1.0.4_all.deb
+sudo dpkg -i spark-notebook-0.2.0-spark-1.2.0-hadoop-1.0.4.zip
+sudo spark-notebook
+</code></pre>
+
+<p><strong>Checkout</strong> the needed version <a href="http://s3.eu-central-1.amazonaws.com/spark-notebook/index.html">here</a>.</p>
+
+<h3>
+<a id="from-the-sources" class="anchor" href="#from-the-sources" aria-hidden="true"><span class="octicon octicon-link"></span></a>From the sources</h3>
+
+<p>The spark notebook requires a <a href="http://en.wikipedia.org/wiki/Java_(programming_language)">Java(TM)</a> environment (aka JVM) as runtime and <a href="https://www.playframework.com/documentation/2.2.6/Home">Play 2.2.6</a> to build it.</p>
+
+<p>Of course, you will also need a working <a href="http://git-scm.com/">GIT</a> installation to download the code and build it.</p>
+
+<h4>
+<a id="procedure" class="anchor" href="#procedure" aria-hidden="true"><span class="octicon octicon-link"></span></a>Procedure</h4>
+
+<h5>
+<a id="download-the-code" class="anchor" href="#download-the-code" aria-hidden="true"><span class="octicon octicon-link"></span></a>Download the code</h5>
+
+<pre><code>git clone https://github.com/andypetrella/spark-notebook.git
+cd spark-notebook
+</code></pre>
+
+<h5>
+<a id="launch-the-server" class="anchor" href="#launch-the-server" aria-hidden="true"><span class="octicon octicon-link"></span></a>Launch the server</h5>
+
+<p>Enter the <code>play console</code> by running <code>play</code> within the <code>spark-notebook</code> folder:</p>
+
+<pre><code>[info] Loading global plugins from /home/noootsab/.sbt/0.13/plugins
+[info] Loading project definition from /home/Sources/noootsab/spark-notebook/project
+[info] Set current project to spark-notebook (in build file:/home/Sources/noootsab/spark-notebook/)
+       _
+ _ __ | | __ _ _  _
+| '_ \| |/ _' | || |
+|  __/|_|\____|\__ /
+|_|            |__/
+
+play 2.2.6 built with Scala 2.10.3 (running Java 1.7.0_72), http://www.playframework.com
+
+&gt; Type "help play" or "license" for more information.
+&gt; Type "exit" or use Ctrl+D to leave this console.
+
+[spark-notebook] $
+</code></pre>
+
+<p>To create your distribution</p>
+
+<pre><code>[spark-notebook] $ dist
+</code></pre>
+
+<p>In order to develop on the Spark Notebook, you'll have to use the <code>run</code> command instead.</p>
+
+<h2>
+<a id="use" class="anchor" href="#use" aria-hidden="true"><span class="octicon octicon-link"></span></a>Use</h2>
+
+<p>When the server has been started, you can head to the page <code>http://localhost:9000</code> and you'll see something similar to:
+<img src="https://raw.github.com/andypetrella/spark-notebook/master/images/list.png" alt="Notebook list"></p>
+
+<p>From there you can either:</p>
+
+<ul>
+<li>create a new notebook or</li>
+<li>launch an existing notebook</li>
+</ul>
+
+<p>In both case, the <code>scala-notebook</code> will open a new tab with your notebook in it, loaded as a web page.</p>
+
+<blockquote>
+<p>Note: a notebook is a JSON file containing the layout and analysis blocks, and it's located
+within the project folder (with the <code>snb</code> extension).
+Hence, they can be shared and we can track their history in an SVM like <code>GIT</code>.</p>
+</blockquote>
+
+<h2>
+<a id="features" class="anchor" href="#features" aria-hidden="true"><span class="octicon octicon-link"></span></a>Features</h2>
+
+<h3>
+<a id="usereconfigure-spark" class="anchor" href="#usereconfigure-spark" aria-hidden="true"><span class="octicon octicon-link"></span></a>Use/Reconfigure Spark</h3>
+
+<p>Since this project aims directly the usage of Spark, a <a href="https://github.com/apache/spark/blob/master/core%2Fsrc%2Fmain%2Fscala%2Forg%2Fapache%2Fspark%2FSparkContext.scala">SparkContext</a> is added to the environment and can directly be used without additional effort.</p>
+
+<p><img src="https://raw.github.com/andypetrella/spark-notebook/master/images/simplest-spark.png" alt="Example using Spark"></p>
+
+<p>Spark will start with a regular/basic configuration. There are different ways to customize the embedded Spark to your needs.</p>
+
+<h3>
+<a id="use-the-form" class="anchor" href="#use-the-form" aria-hidden="true"><span class="octicon octicon-link"></span></a>Use the <code>form</code>
+</h3>
+
+<p>In order to adapt the configuration of the <code>SparkContext</code>, one can add the widget <code>notebook.front.widgets.Spark</code>.
+This widget takes the current context as only argument and will produce an HTML <code>form</code> that will allow manual and friendly changes to be applied.</p>
+
+<p>So first, adding the widget in a cell,</p>
+
+<div class="highlight highlight-scala"><pre><span class="pl-k">import</span> <span class="pl-v">notebook.front.widgets.</span><span class="pl-v">Spark</span>
+<span class="pl-k">new</span> <span class="pl-en">Spark</span>(sparkContext)</pre></div>
+
+<p>Run the cell and you'll get,
+<img src="https://raw.github.com/andypetrella/spark-notebook/master/images/update-spark-conf-form.png" alt="Using SQL"></p>
+
+<p>It has two parts:</p>
+
+<ul>
+<li>the first one is showing an input for each current properties</li>
+<li>the second will add new entries in the configuration based on the provided name</li>
+</ul>
+
+<p>Submit the first part and the <code>SparkContext</code> will restart in the background (you can check the Spark UI to check if you like).</p>
+
+<h3>
+<a id="the-reset-function" class="anchor" href="#the-reset-function" aria-hidden="true"><span class="octicon octicon-link"></span></a>The <code>reset</code> function</h3>
+
+<p>The  <em>function</em> <code>reset</code> is available in all notebooks: This function takes several parameters, but the most important one is <code>lastChanges</code> which is itself a function that can adapt the <a href="https://github.com/apache/spark/blob/master/core%2Fsrc%2Fmain%2Fscala%2Forg%2Fapache%2Fspark%2FSparkConf.scala">SparkConf</a>. This way, we can change the <em>master</em>, the <em>executor memory</em> and a <em>cassandra sink</em> or whatever before restarting it. For more Spark configuration options see: Spark Configuration</p>
+
+<p>In this example we reset <code>SparkContext</code> and add configuration options to use the [cassandra-connector]:</p>
+
+<div class="highlight highlight-scala"><pre><span class="pl-k">import</span> <span class="pl-v">org.apache.spark.</span>{<span class="pl-v">Logging</span>, <span class="pl-v">SparkConf</span>}
+<span class="pl-k">val</span> <span class="pl-en">cassandraHost</span><span class="pl-k">:</span><span class="pl-st">String</span> <span class="pl-k">=</span> <span class="pl-s1"><span class="pl-pds">"</span>localhost<span class="pl-pds">"</span></span>
+reset(lastChanges<span class="pl-k">=</span> _.set(<span class="pl-s1"><span class="pl-pds">"</span>spark.cassandra.connection.host<span class="pl-pds">"</span></span>, cassandraHost))</pre></div>
+
+<p>This makes Cassandra connector avaible in the Spark Context. Then you can use it, like so:</p>
+
+<div class="highlight highlight-scala"><pre><span class="pl-k">import</span> <span class="pl-v">com.datastax.spark.connector.</span><span class="pl-v">_</span>
+sparkContext.cassandraTable(<span class="pl-s1"><span class="pl-pds">"</span>test_keyspace<span class="pl-pds">"</span></span>, <span class="pl-s1"><span class="pl-pds">"</span>test_column_family<span class="pl-pds">"</span></span>)</pre></div>
+
+<h3>
+<a id="keep-an-eye-on-your-tasks" class="anchor" href="#keep-an-eye-on-your-tasks" aria-hidden="true"><span class="octicon octicon-link"></span></a>Keep an eye on your tasks</h3>
+
+<p>Accessing the Spark UI is not always allowed or easy, hence a simple widget is available for us to keep a little eye on the stages running on the Spark cluster.</p>
+
+<p>Luckily, it's fairly easy, just add this to the notebook:</p>
+
+<div class="highlight highlight-scala"><pre><span class="pl-k">import</span> <span class="pl-v">org.apache.spark.ui.notebook.front.widgets.</span><span class="pl-v">SparkInfo</span>
+<span class="pl-k">import</span> <span class="pl-v">scala.concurrent.duration.</span><span class="pl-v">_</span>
+<span class="pl-k">new</span> <span class="pl-en">SparkInfo</span>(sparkContext, checkInterval<span class="pl-k">=</span><span class="pl-c1">1</span> second, execNumber<span class="pl-k">=</span><span class="pl-en">Some</span>(<span class="pl-c1">100</span>))</pre></div>
+
+<p>This call will show and update a feedback panel tracking some basic (atm) metrics, in this configuration there will be <strong>one check per second</strong>, but will check only <strong>100 times</strong>.</p>
+
+<p>This can be tuned at will, for instance for an infinte checking, one can pass the <code>None</code> value to the argument <code>execNumber</code>.</p>
+
+<p>Counting the words of a <a href="http://en.wikipedia.org/wiki/Wikipedia:Database_download">wikipedia dump</a> will result in
+<img src="https://raw.github.com/andypetrella/spark-notebook/master/images/spark-tracker.png" alt="Showing progress"></p>
+
+<h3>
+<a id="using-sparksql" class="anchor" href="#using-sparksql" aria-hidden="true"><span class="octicon octicon-link"></span></a>Using (Spark)SQL</h3>
+
+<p>Spark comes with this handy and cool feature that we can write some SQL queries rather than boilerplating with
+Scala or whatever code, with the clear advantage that the resulting DAG is optimized.</p>
+
+<p>The spark-notebook offers SparkSQL support.
+To access it, we first we need to register an <code>RDD</code> as a table:</p>
+
+<div class="highlight highlight-scala"><pre>dataRDD.registerTempTable(<span class="pl-s1"><span class="pl-pds">"</span>data<span class="pl-pds">"</span></span>)</pre></div>
+
+<p>Now, we can play with SQL in two different ways, the static and the dynamic ones.</p>
+
+<h4>
+<a id="static-sql" class="anchor" href="#static-sql" aria-hidden="true"><span class="octicon octicon-link"></span></a>Static SQL</h4>
+
+<p>Then we can play with this <code>data</code> table like so:</p>
+
+<pre><code>:sql select col1 from data where col2 == 'thingy'
+</code></pre>
+
+<p>This will give access to the result via the <code>resXYZ</code> variable.</p>
+
+<p>This is already helpful, but the <code>resXYZ</code> nummering can change and is not friendly, so we can also give a name to the result:</p>
+
+<pre><code>:sql[col1Var] select col1 from data where col2 == 'thingy'
+</code></pre>
+
+<p>Now, we can use the variable <code>col1Var</code> wrapping a <code>SchemaRDD</code>.</p>
+
+<p>This variable is reactive meaning that it react to the change of the SQL result. Hence in order to deal with the result, you can access its <code>react</code> function which takes two arguments:</p>
+
+<ul>
+<li>a <strong>function</strong> to apply on the underlying <code>SchemaRDD</code> to compute a result</li>
+<li>a <strong>widget</strong> that will take the result of the function applied to the <code>SchemaRDD</code> and use it to update its rendering</li>
+</ul>
+
+<p>The power of this reactivity is increased when we use SQL with dynamic parts.</p>
+
+<h4>
+<a id="dynamic-sql" class="anchor" href="#dynamic-sql" aria-hidden="true"><span class="octicon octicon-link"></span></a>Dynamic SQL</h4>
+
+<p>A dynamic SQL is looking like a static SQL but where specific tokens are used. Such tokens are taking the form: {<code>type</code>: <code>variableName</code>}.</p>
+
+<p>When executing the command, the notebook will produce a form by generating on input for each dynamic part. See the show case below.</p>
+
+<p>An example of such dynamic SQL is</p>
+
+<pre><code>:sql[selectKids] SELECT name FROM people WHERE name = "{String: name}" and age &gt;= {Int: age}
+</code></pre>
+
+<p>Which will create a form with to inputs, one text and on number.</p>
+
+<p>When changing the value in the inputs, the SQL is compiled on the server and the result is printed on the notebook (Success, Failure, Bad Plan, etc.).</p>
+
+<p>Again, the result is completely reactive, hence using the <code>react</code> function is mandatory to use the underlying SchemaRDD (when it becomes valid!).</p>
+
+<h4>
+<a id="show-case" class="anchor" href="#show-case" aria-hidden="true"><span class="octicon octicon-link"></span></a>Show case</h4>
+
+<p>This is how it looks like in the notebook:</p>
+
+<p><img src="https://raw.github.com/andypetrella/spark-notebook/master/images/reactive-spark-sql.png" alt="Using SQL"></p>
+
+<h3>
+<a id="interacting-with-javascript" class="anchor" href="#interacting-with-javascript" aria-hidden="true"><span class="octicon octicon-link"></span></a>Interacting with JavaScript</h3>
+
+<p>Showing numbers can be good but great analysis reports should include relevant charts, for that we need JavaScript to manipulate the notebook's DOM.</p>
+
+<p>For that purpose, a notebook can use the <code>Playground</code> abstraction. It allows us to create data in Scala and use it in predefined JavaScript functions (located under <code>assets/javascripts/notebook</code>) or even JavaScript snippets (that is, written straight in the notebook as a Scala <code>String</code> to be sent to the JavaScript interpreter).</p>
+
+<p>The JavaScript function will be called with these parameters:</p>
+
+<ul>
+<li>the data observable: a JS function can register its new data via <code>subscribe</code>.</li>
+<li>the dom element: so that it can update it with custom behavior</li>
+<li>an extra object: any additional data, configuration or whatever that comes from the Scala side</li>
+</ul>
+
+<p>Here is how this can be used, with a predefined <code>consoleDir</code> JS function (<a href="https://github.com/andypetrella/spark-notebook/blob/master/observable/src/main/assets/observable/js/consoleDir.coffee">see here</a>):</p>
+
+<p><img src="https://raw.github.com/andypetrella/spark-notebook/master/images/simple-pg.png" alt="Simple Playground"></p>
+
+<p>Another example using the same predefined function and example to react on the new incoming data (more in further section). The <strong>new stuff</strong> here is the use of <code>Codec</code> to convert a Scala object into the JSON format used in JS:</p>
+
+<p><img src="https://raw.github.com/andypetrella/spark-notebook/master/images/data-pg.png" alt="Playground with custom data"></p>
+
+<h3>
+<a id="plotting-with-d3" class="anchor" href="#plotting-with-d3" aria-hidden="true"><span class="octicon octicon-link"></span></a>Plotting with <a href="http://d3js.org/">D3</a>
+</h3>
+
+<p>Plotting with D3.js is rather common now, however it's not always simple, hence there is a Scala wrapper that brings the bootstrap of D3 in the mix.</p>
+
+<p>These wrappers are <code>D3.svg</code> and <code>D3.linePlot</code>, and they are just a proof of concept for now. The idea is to bring Scala data to D3.js then create <code>Coffeescript</code> to interact with them.</p>
+
+<p>For instance, <code>linePlot</code> is used like so:</p>
+
+<p><img src="https://raw.github.com/andypetrella/spark-notebook/master/images/linePlot.png" alt="Using Rickshaw"></p>
+
+<blockquote>
+<p>Note: This is subject to future change because it would be better to use <code>playground</code> for this purpose.</p>
+</blockquote>
+
+<h3>
+<a id="timeseries-with--rickshaw" class="anchor" href="#timeseries-with--rickshaw" aria-hidden="true"><span class="octicon octicon-link"></span></a>Timeseries with  <a href="http://code.shutterstock.com/rickshaw/">Rickshaw</a>
+</h3>
+
+<p>Plotting timeseries is very common, for this purpose the spark notebook includes Rickshaw that quickly enables handsome timeline charts.</p>
+
+<p>Rickshaw is available through <code>Playground</code> and a dedicated function for simple needs <code>rickshawts</code>.</p>
+
+<p>To use it, you are only required to convert/wrap your data points into a dedicated <code>Series</code> object:</p>
+
+<div class="highlight highlight-scala"><pre><span class="pl-k">def</span> <span class="pl-en">createTss</span>(start<span class="pl-k">:</span><span class="pl-st">Long</span>, step<span class="pl-k">:</span><span class="pl-st">Int</span><span class="pl-k">=</span><span class="pl-c1">60</span><span class="pl-k">*</span><span class="pl-c1">1000</span>, nb<span class="pl-k">:</span><span class="pl-st">Int</span> <span class="pl-k">=</span> <span class="pl-c1">100</span>)<span class="pl-k">:</span><span class="pl-en">Seq</span>[<span class="pl-en">Series</span>] <span class="pl-k">=</span> ...
+<span class="pl-k">val</span> <span class="pl-en">data</span> <span class="pl-k">=</span> createTss(orig, step, nb)
+
+<span class="pl-k">val</span> <span class="pl-en">p</span> <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">Playground</span>(data, <span class="pl-en">List</span>(<span class="pl-en">Script</span>(<span class="pl-s1"><span class="pl-pds">"</span>rickshawts<span class="pl-pds">"</span></span>,
+                                          <span class="pl-en">Json</span>.obj(
+                                            <span class="pl-s1"><span class="pl-pds">"</span>renderer<span class="pl-pds">"</span></span> <span class="pl-k">→</span> <span class="pl-s1"><span class="pl-pds">"</span>stack<span class="pl-pds">"</span></span>,
+                                            <span class="pl-s1"><span class="pl-pds">"</span>fixed<span class="pl-pds">"</span></span> <span class="pl-k">→</span> <span class="pl-en">Json</span>.obj(
+                                                        <span class="pl-s1"><span class="pl-pds">"</span>interval<span class="pl-pds">"</span></span> <span class="pl-k">→</span> (step<span class="pl-k">/</span><span class="pl-c1">1000</span>),
+                                                        <span class="pl-s1"><span class="pl-pds">"</span>max<span class="pl-pds">"</span></span> <span class="pl-k">→</span> <span class="pl-c1">100</span>,
+                                                        <span class="pl-s1"><span class="pl-pds">"</span>baseInSec<span class="pl-pds">"</span></span> <span class="pl-k">→</span> (orig<span class="pl-k">/</span><span class="pl-c1">1000</span>)
+                                                      )
+                                          ))))(seriesCodec)</pre></div>
+
+<p>As you can see, the only big deal is to create the timeseries (<code>Seq[Series]</code> which is a simple wrapper around:</p>
+
+<ul>
+<li>name</li>
+<li>color</li>
+<li>data (a sequence of <code>x</code> and <code>y</code>)</li>
+</ul>
+
+<p>Also, there are some options to tune the display:</p>
+
+<ul>
+<li>provide the type of renderer (<code>line</code>, <code>stack</code>, ...)</li>
+<li>if the timeseries will be updated you can fix the window by supplying the <code>fixed</code> object:
+
+<ul>
+<li>interval (at which data is upated)</li>
+<li>max (the max number of points displayed)</li>
+<li>the unit in the <code>X</code> axis.</li>
+</ul>
+</li>
+</ul>
+
+<p>Here is an example of the kind of result you can expect:</p>
+
+<p><img src="https://raw.github.com/andypetrella/spark-notebook/master/images/use-rickshaw.png" alt="Using Rickshaw"></p>
+
+<h3>
+<a id="dynamic-update-of-data-and-plot-using-scalas-future" class="anchor" href="#dynamic-update-of-data-and-plot-using-scalas-future" aria-hidden="true"><span class="octicon octicon-link"></span></a>Dynamic update of data and plot using Scala's <code>Future</code>
+</h3>
+
+<p>One of the very cool things that is used in the original <code>scala-notebook</code> is the use of reactive libs on both sides: server and client, combined with WebSockets. This offers a neat way to show dynamic activities like streaming data and so on.</p>
+
+<p>We can exploit the reactive support to update Plot wrappers (the <code>Playground</code> instance actually) in a dynamic manner. If the JS functions are listening to the data changes they can automatically update their result.</p>
+
+<p>The following example is showing how a timeseries plotted with Rickshaw can be regularly updated. We are using Scala <code>Futures</code> to simulate a server side process that would poll for a third-party service:</p>
+
+<p><img src="https://raw.github.com/andypetrella/spark-notebook/master/images/dyn-ts-code.png" alt="Update Timeseries Result"></p>
+
+<p>The results will be:</p>
+
+<p><img src="https://raw.github.com/andypetrella/spark-notebook/master/images/dyn-ts.gif" alt="Update Timeseries Result"></p>
+
+<h3>
+<a id="update-notebook-classpath" class="anchor" href="#update-notebook-classpath" aria-hidden="true"><span class="octicon octicon-link"></span></a>Update <em>Notebook</em> <code>ClassPath</code>
+</h3>
+
+<p>Keeping your notebook runtime updated with the libraries you need in the classpath is usually cumbersome as it requires updating the server configuration in the SBT definition and restarting the system. Which is pretty sad because it requires a restart, rebuild and is not contextual to the notebook!</p>
+
+<p>Hence, a dedicated context has been added to the block, <code>:cp</code> which allows us to add specifiy <strong>local paths</strong> to jars that will be part of the classpath.</p>
+
+<pre><code>:cp /home/noootsab/.m2/repository/joda-time/joda-time/2.4/joda-time-2.4.jar
+</code></pre>
+
+<p>Or even</p>
+
+<pre><code>:cp
+/tmp/scala-notebook/repo/com/codahale/metrics/metrics-core/3.0.2/metrics-core-3.0.2.jar
+/tmp/scala-notebook/repo/org/scala-lang/scala-compiler/2.10.4/scala-compiler-2.10.4.jar
+/tmp/scala-notebook/repo/org/scala-lang/scala-library/2.10.4/scala-library-2.10.4.jar
+/tmp/scala-notebook/repo/joda-time/joda-time/2.3/joda-time-2.3.jar
+/tmp/scala-notebook/repo/commons-logging/commons-logging/1.1.1/commons-logging-1.1.1.jar
+/tmp/scala-notebook/repo/com/datastax/cassandra/cassandra-driver-core/2.0.4/cassandra-driver-core-2.0.4.jar
+/tmp/scala-notebook/repo/org/apache/thrift/libthrift/0.9.1/libthrift-0.9.1.jar
+/tmp/scala-notebook/repo/org/apache/httpcomponents/httpcore/4.2.4/httpcore-4.2.4.jar
+/tmp/scala-notebook/repo/org/joda/joda-convert/1.2/joda-convert-1.2.jar
+/tmp/scala-notebook/repo/org/scala-lang/scala-reflect/2.10.4/scala-reflect-2.10.4.jar
+/tmp/scala-notebook/repo/org/apache/cassandra/cassandra-clientutil/2.0.9/cassandra-clientutil-2.0.9.jar
+/tmp/scala-notebook/repo/org/slf4j/slf4j-api/1.7.2/slf4j-api-1.7.2.jar
+/tmp/scala-notebook/repo/com/datastax/cassandra/cassandra-driver-core/2.0.4/cassandra-driver-core-2.0.4-sources.jar
+/tmp/scala-notebook/repo/io/netty/netty/3.9.0.Final/netty-3.9.0.Final.jar
+/tmp/scala-notebook/repo/org/apache/commons/commons-lang3/3.3.2/commons-lang3-3.3.2.jar
+/tmp/scala-notebook/repo/commons-codec/commons-codec/1.6/commons-codec-1.6.jar
+/tmp/scala-notebook/repo/org/apache/httpcomponents/httpclient/4.2.5/httpclient-4.2.5.jar
+/tmp/scala-notebook/repo/org/apache/cassandra/cassandra-thrift/2.0.9/cassandra-thrift-2.0.9.jar
+/tmp/scala-notebook/repo/com/datastax/spark/spark-cassandra-connector_2.10/1.1.0-alpha1/spark-cassandra-connector_2.10-1.1.0-alpha1.jar
+/tmp/scala-notebook/repo/com/google/guava/guava/15.0/guava-15.0.jar
+</code></pre>
+
+<p>Here is what it'll look like in the notebook:</p>
+
+<p><img src="https://raw.github.com/andypetrella/spark-notebook/master/images/simple-cp.png" alt="Simple Classpath"></p>
+
+<h3>
+<a id="update-spark-dependencies-sparkjars" class="anchor" href="#update-spark-dependencies-sparkjars" aria-hidden="true"><span class="octicon octicon-link"></span></a>Update <strong>Spark</strong> dependencies (<code>spark.jars</code>)</h3>
+
+<p>So you use Spark, hence you know that it's not enough to have the jars locally added to the Driver's classpath.</p>
+
+<p>Indeed, workers needs to have them in their classpath. One option would be to update the list of jars (<code>spark.jars</code> property) provided to the <code>SparkConf</code> using the <code>reset</code> function.</p>
+
+<p>However, this can be very tricky when we need to add jars that have themselves plenty of dependencies.</p>
+
+<p>However, there is another context available to update both the classpath on the notebook and in Spark</p>
+
+<pre><code>:dp
++ group1 % artifact1 % version1
++ group2 % artifact2 % version2
+group3 % artifact3 % version3
++ group4 % artifact4 % version4
+
+- group5 % artifact5 % version5
++ group6 % artifact6 % version6
+- group7 % artifact7 % version7
+</code></pre>
+
+<p>So this is simple:</p>
+
+<ul>
+<li>lines starting with <code>-</code> are exclusions (transitive)</li>
+<li>lines starting with <code>+</code> or nothing are inclusions</li>
+</ul>
+
+<p>The jars will be fetched in a temporary repository (that can be hardcoded using <code>:local-repo</code>).</p>
+
+<p>Then they'll be added to the Spark's jars property, before restarting the context.</p>
+
+<p>For example, if you want to use <a href="https://github.com/bigdatagenomics/adam">ADAM</a>, all you need to do is:</p>
+
+<pre><code>:dp org.bdgenomics.adam % adam-apis % 0.15.0
+- org.apache.hadoop % hadoop-client %   _
+- org.apache.spark  %     _         %   _
+- org.scala-lang    %     _         %   _
+- org.scoverage     %     _         %   _
+</code></pre>
+
+<p>In live, you can check the notebook named <code>Update classpath and Spark's jars</code>, which looks like this:</p>
+
+<p><img src="https://raw.github.com/andypetrella/spark-notebook/master/images/spark-jars.png" alt="Spark Jars"></p>
+
+<h2>
+<a id="important" class="anchor" href="#important" aria-hidden="true"><span class="octicon octicon-link"></span></a>IMPORTANT</h2>
+
+<p>Some vizualizations (wisp) are currently using Highcharts which is <strong>not</strong> available for commercial or private usage!</p>
+
+<p>If you're in this case, please to contact me first.</p>
+
+<h2>
+<a id="known-issues" class="anchor" href="#known-issues" aria-hidden="true"><span class="octicon octicon-link"></span></a>KNOWN ISSUES</h2>
+
+<h3>
+<a id="user-limit-of-inotify-watches-reached" class="anchor" href="#user-limit-of-inotify-watches-reached" aria-hidden="true"><span class="octicon octicon-link"></span></a><code>User limit of inotify watches reached</code>
+</h3>
+
+<p>When running Spark-Notebook on some Linux distribs (specifically ArchLinux), you may encounter this exception:</p>
+
+<pre><code>[spark-notebook] $ run
+
+java.io.IOException: User limit of inotify watches reached
+at sun.nio.fs.LinuxWatchService$Poller.implRegister(LinuxWatchService.java:261)
+at sun.nio.fs.AbstractPoller.processRequests(AbstractPoller.java:260)
+at sun.nio.fs.LinuxWatchService$Poller.run(LinuxWatchService.java:326)
+at java.lang.Thread.run(Thread.java:745)
+[trace] Stack trace suppressed: run last sparkNotebook/compile:run for the full output.
+[error] (sparkNotebook/compile:run) java.lang.reflect.InvocationTargetException
+[error] Total time: 1 s, completed Jan 31, 2015 7:21:58 PM 
+</code></pre>
+
+<p>This certainly means your <code>sysctl</code> configuration limits too much <code>inotify</code> watches.</p>
+
+<p>You must increase the parameter <code>fs.inotify.max_user_watches</code>.</p>
+
+<p>To get current value:</p>
+
+<pre><code>$ sudo sysctl -a | grep fs.inotify.max_user_watches
+fs.inotify.max_user_watches = 8192
+</code></pre>
+
+<p>To increase this value, create a new file <code>/etc/sysctl.d99-sysctl.conf</code></p>
+
+<pre><code>fs.inotify.max_user_watches=100000
+</code></pre>
+
+<p>Refresh your live <code>sysctl</code> configuration:</p>
+
+<pre><code>$ sudo sysctl --system
+</code></pre>
+      </section>
+
+      <footer>
+        <span class="ribbon-outer">
+          <span class="ribbon-inner">
+            <p>this project by <a href="https://github.com/andypetrella">andypetrella</a> can be found on <a href="https://github.com/andypetrella/spark-notebook">GitHub</a></p>
+          </span>
+          <span class="left-tail"></span>
+          <span class="right-tail"></span>
+        </span>
+        <p>Generated with <a href="http://pages.github.com">GitHub Pages</a> using Merlot</p>
+        <span class="octocat"></span>
+      </footer>
+
+    </div>
+
+    
+  </body>
+</html>
