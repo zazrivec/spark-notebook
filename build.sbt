@@ -14,7 +14,27 @@ maintainer := "Andy Petrella" //Docker
 
 dockerExposedPorts in Docker := Seq(9000, 9443) //Docker
 
+//dockerBaseImage := "andypetrella/spark-notebook-base"
+
 dockerRepository := Some("andypetrella") //Docker
+
+daemonUser in Docker := "notebook" //Docker
+
+dockerRawWithOriginalUser := """
+#nothing as root
+RUN ["grep notebook /etc/passwd && echo user exist || useradd notebook"]
+RUN ["mkdir", "/my-notebooks"]
+RUN ["chown -R $(id -u notebook):$(id -g notebook) /my-notebooks"]
+RUN ["chmod a+x ./bin/*"]
+#/nothing as root
+"""
+
+dockerRawWithDaemonUser := """
+#nothing as notebook
+#/nothing as notebook
+"""
+
+//dockerEntrypoint := Seq("ls", "-la", "bin") //Docker
 
 packageName in Docker := "spark-notebook"
 
