@@ -36,7 +36,7 @@ resolvers in ThisBuild ++=  Seq(
                             )
 
 EclipseKeys.skipParents in ThisBuild := false
-							
+
 compileOrder := CompileOrder.Mixed
 
 publishMavenStyle := false

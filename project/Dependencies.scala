@@ -22,8 +22,8 @@ object Dependencies {
   val defaultSparkVersion     = sys.props.getOrElse("spark.version", "1.2.0")
   def sparkRepl(v:String)     = "org.apache.spark"          %%         "spark-repl"           %         v           excludeAll(ExclusionRule("org.apache.hadoop"))
   def sparkSQL(v:String)      = "org.apache.spark"          %%         "spark-sql"            %         v           excludeAll(ExclusionRule("org.apache.hadoop"))
-  val defaultHadoopVersion    = sys.props.getOrElse("hadoop.version", "1.0.4")
-  def hadoopClient(v:String)  = "org.apache.hadoop"         %         "hadoop-client"         %         v           excludeAll(ExclusionRule("org.apache.commons", "commons-exec"))
+  val defaultHadoopVersion    = sys.props.getOrElse("hadoop.version", "2.2.0")
+  def hadoopClient(v:String)  = "org.apache.hadoop"         %         "hadoop-client"         %         v           excludeAll(ExclusionRule("org.apache.commons", "commons-exec"), ExclusionRule("commons-codec", "commons-codec"))
   val defaultJets3tVersion    = sys.props.getOrElse("jets3t.version", "0.7.1")
   def jets3t(v:String)        = "net.java.dev.jets3t"       %            "jets3t"             %         v           force()
 

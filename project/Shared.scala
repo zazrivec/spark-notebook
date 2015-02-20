@@ -25,7 +25,10 @@ object Shared {
         breeze,
         sparkSQL(sv),
         hadoopClient(hv),
-        jets3t(jv)
+        jets3t(jv),
+        "org.bdgenomics.adam" % "adam-core" % "0.16.0" excludeAll(ExclusionRule("commons-codec", "commons-codec")),
+        "org.bdgenomics.adam" % "adam-apis" % "0.16.0" excludeAll(ExclusionRule("commons-codec", "commons-codec")),
+        commonsCodec
       )
       libs
     },
