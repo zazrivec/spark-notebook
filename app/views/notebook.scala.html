@@ -345,10 +345,19 @@
   <script type="text/javascript">
       sys_info = "@{sys_info.getOrElse("missing: sys_info")}";
   </script>
+
+  <!-- SVG to IMG -->
+  <script type="text/javascript" src="@routes.Assets.at("javascripts/third/rgbcolor.js")"></script>
+  <script type="text/javascript" src="@routes.Assets.at("javascripts/third/StackBlur.js")"></script>
+  <script type="text/javascript" src="@routes.Assets.at("javascripts/third/canvg.js")"></script>
+  <script type="text/javascript" src="@routes.Assets.at("javascripts/third/svg_todataurl.js")"></script>
+
   <script src="@routes.Assets.at("javascripts/ipython/js/bokeh.js")" type="text/javascript" charset="utf-8"></script>
   <script src="@routes.Assets.at("ipython/components/text-encoding/lib/encoding.js")" charset="utf-8"></script>
   <!-- tachyon routes -->
   <script type="text/javascript" src="@controllers.routes.TachyonProxy.tachyonJavascriptRoutes()"></script>
+  <!-- utils -->
+  <script type="text/javascript" src="@routes.Assets.at("javascripts/notebook/utils.js")"></script>
   <!-- main app -->
   <script src="@routes.Assets.at("ipython/notebook/js/main.js")" charset="utf-8"></script>
 }
