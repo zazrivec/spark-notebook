@@ -16,6 +16,7 @@ object Shared {
   lazy val withParquet = SettingKey[Boolean]("x-with-parquet")
 
   lazy val sharedSettings: Seq[Def.Setting[_]] = Seq(
+    organization := "io.spark-notebook",
     scalaVersion := defaultScalaVersion,
     sparkVersion := defaultSparkVersion,
     hadoopVersion := defaultHadoopVersion,

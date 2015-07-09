@@ -2,15 +2,11 @@ import Dependencies._
 import Shared._
 import sbtbuildinfo.Plugin._
 
-organization := "noootsab"
-
 name := "spark-notebook"
 
 scalaVersion := defaultScalaVersion
 
-version in ThisBuild <<= (scalaVersion, sparkVersion, hadoopVersion, withHive, withParquet) { (sc, sv, hv, h, p) =>
-  s"0.6.0-scala-$sc-spark-$sv-hadoop-$hv" + (if (h) "-with-hive" else "") + (if (p) "-with-parquet" else "")
-}
+version in ThisBuild := "0.6.0"
 
 maintainer := "Andy Petrella" //Docker
 
@@ -134,6 +130,9 @@ lazy val sparkNotebook = project.in(file(".")).enablePlugins(play.PlayScala).ena
   .settings(sharedSettings: _*)
   .settings(
     mappings in Universal ++= directory("notebooks"),
+    version in Universal <<= (version in ThisBuild, scalaVersion, sparkVersion, hadoopVersion, withHive, withParquet) { (v, sc, sv, hv, h, p) =>
+                                s"$v-scala-$sc-spark-$sv-hadoop-$hv" + (if (h) "-with-hive" else "") + (if (p) "-with-parquet" else "")
+                              },
     mappings in Docker ++= directory("notebooks")
   )
   .settings(includeFilter in(Assets, LessKeys.less) := "*.less")
@@ -155,7 +154,6 @@ lazy val subprocess = project.in(file("modules/subprocess"))
     }
   )
   .settings(sharedSettings: _*)
-  .settings(sparkSettings: _*)
 
 
 lazy val observable = Project(id = "observable", base = file("modules/observable"))
@@ -172,6 +170,9 @@ lazy val observable = Project(id = "observable", base = file("modules/observable
 
 lazy val common = Project(id = "common", base = file("modules/common"))
   .dependsOn(observable)
+  .settings(
+    version  <<= (version in ThisBuild, sparkVersion) { (v,sv) => s"_${v}_$sv" }
+  )
   .settings(
     libraryDependencies ++= Seq(
       akka,
@@ -203,6 +204,9 @@ lazy val common = Project(id = "common", base = file("modules/common"))
 
 lazy val spark = Project(id = "spark", base = file("modules/spark"))
   .dependsOn(common, subprocess, observable)
+  .settings(
+    version  <<= (version in ThisBuild, sparkVersion) { (v,sv) => s"_${v}_$sv" }
+  )
   .settings(
     libraryDependencies ++= Seq(
       akkaRemote,
