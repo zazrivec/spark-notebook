@@ -1,10 +1,10 @@
 package notebook.front.widgets
 
+import org.slf4j.LoggerFactory
 import notebook.JsonCodec._
 import notebook._
 import notebook.front._
 import org.apache.spark.sql.{DataFrame, SQLContext}
-import play.api.Logger
 import play.api.libs.json._
 
 import scala.util._
@@ -13,6 +13,8 @@ class Sql(sqlContext: SQLContext, call: String) extends Widget {
 
   private[this] val sqlInputRegex = "(\\{[^\\}]+\\})".r
   private[this] val sqlTypedInputRegex = "^\\{([^:]+):(.*)\\}$".r
+
+  private lazy val log = LoggerFactory.getLogger(getClass)
 
   private type Item = (String, TypedInput[_])
 
@@ -44,14 +46,14 @@ class Sql(sqlContext: SQLContext, call: String) extends Widget {
 
   val mergedObservables: RxObservable[(String, Any)] = {
     val l: List[RxObservable[(String, Any)]] = parts.map { p =>
-      val ob = p._2.widget.currentData.observable.inner //.doOnEach(x => Logger.debug("########:"+x.toString))
+      val ob = p._2.widget.currentData.observable.inner //.doOnEach(x => log.debug("########:"+x.toString))
     val o: RxObservable[(String, Any)] = ob.map((d: Any) => (p._2.name, d))
       o.doOnError { t =>
-        Logger.warn(s"$p._1 is errored with ${t.getMessage}")
+        log.warn(s"$p._1 is errored with ${t.getMessage}")
         //t.printStackTrace()
       }
       o.doOnCompleted(
-        Logger.warn(s"$p._1 is completed")
+        log.warn(s"$p._1 is completed")
       )
       o
     }
@@ -96,7 +98,7 @@ class Sql(sqlContext: SQLContext, call: String) extends Widget {
     val tried: Option[Try[DataFrame]] = Some(Try {
       sqlContext.sql(c)
     })
-    Logger.info(" Tried => " + tried.toString)
+    log.info(" Tried => " + tried.toString)
     subject.onNext(tried)
     sql(tried)
     tried
@@ -117,7 +119,7 @@ class Sql(sqlContext: SQLContext, call: String) extends Widget {
             val r = f(s)
             result.onNext(r)
           case x =>
-            Logger.error("ARRrrggllll → " + x.toString)
+            log.error("ARRrrggllll → " + x.toString)
         }
       }
     subject.subscribe(sub)
@@ -139,13 +141,13 @@ class Sql(sqlContext: SQLContext, call: String) extends Widget {
     }
 
     override def onError(error: Throwable): Unit = {
-      Logger.warn(s"Merged errored with ${error.getMessage}")
+      log.warn(s"Merged errored with ${error.getMessage}")
       //error.printStackTrace()
       super.onError(error)
     }
 
     override def onCompleted(): Unit = {
-      Logger.warn(s"Merged completed!")
+      log.warn(s"Merged completed!")
       super.onCompleted()
     }
   })

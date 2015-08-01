@@ -9,7 +9,6 @@ import com.typesafe.config.Config
 import org.apache.commons.exec._
 import org.apache.log4j.PropertyConfigurator
 import org.slf4j.LoggerFactory
-import play.api.{Logger, Play}
 
 import scala.collection.JavaConversions._
 import scala.collection.mutable.ListBuffer
@@ -37,6 +36,8 @@ class BetterFork[A <: ForkableProcess : reflect.ClassTag](config: Config,
   private implicit val ec = executionContext
 
   import BetterFork._
+
+  private lazy val log = LoggerFactory.getLogger(getClass)
 
   val processClass = (implicitly[reflect.ClassTag[A]]).runtimeClass
 
@@ -121,9 +122,9 @@ class BetterFork[A <: ForkableProcess : reflect.ClassTag](config: Config,
       val completion = Promise[Int]()
       exec.setWorkingDirectory(workingDirectory)
       exec.execute(cmd, environment, new ExecuteResultHandler {
-        Logger.info(s"Spawning $cmd")
-        Logger.info(s"With Env $environment")
-        Logger.info(s"In working directory $workingDirectory")
+        log.info(s"Spawning $cmd")
+        log.info(s"With Env $environment")
+        log.info(s"In working directory $workingDirectory")
 
         def onProcessFailed(e: ExecuteException) {
           e.printStackTrace()
@@ -178,7 +179,11 @@ object BetterFork {
         acc
       }
     }
-    val loader = Play.current.classloader
+    // FIXME
+    //val loader = Play.current.classloader
+
+    val loader = getClass.getClassLoader
+
     val gurls = urls(loader).distinct.filter(!_.contains("logback-classic")) //.filter(!_.contains("sbt/"))
     gurls
   }

@@ -31,6 +31,16 @@ object Shared {
     libraryDependencies += guava
   )
 
+  val wispSettings: Seq[Def.Setting[_]] = Seq(
+    libraryDependencies += wispDepSumac,
+    unmanagedJars in Compile ++= (
+      if (scalaVersion.value.startsWith("2.10"))
+        Seq((baseDirectory in "sparkNotebook").value / "temp" / "wisp_2.10-0.0.5.jar")
+      else
+        Seq((baseDirectory in "sparkNotebook").value / "temp" / "wisp_2.11-0.0.5.jar")
+    )
+  )
+
   val repl: Seq[Def.Setting[_]] = {
     val lib = libraryDependencies <++= (sparkVersion, hadoopVersion, jets3tVersion) {
       (sv, hv, jv) => if (sv != "1.2.0") Seq(sparkRepl(sv)) else Seq.empty
@@ -59,12 +69,20 @@ object Shared {
     }
   )
 
+  val yarnWebProxy: Seq[Def.Setting[_]] = Seq(
+    libraryDependencies <++= (hadoopVersion) { (hv) =>
+      if (!hv.startsWith("1")) List(yarnProxy(hv)) else Nil
+    }
+  )
+
   lazy val sparkSettings: Seq[Def.Setting[_]] = Seq(
-    libraryDependencies <++= (sparkVersion, hadoopVersion, jets3tVersion) { (sv, hv, jv) =>
+    libraryDependencies <++= (scalaVersion, sparkVersion, hadoopVersion, jets3tVersion) { (v, sv, hv, jv) =>
       val jets3tVersion = sys.props.get("jets3t.version") match {
         case Some(jv) => jets3t(Some(jv), None)
         case _ => jets3t(None, Some(hv))
       }
+
+      val jettyVersion = "8.1.14.v20131031"
 
       val libs = Seq(
         breeze,
@@ -74,10 +92,26 @@ object Shared {
         hadoopClient(hv),
         jets3tVersion,
         commonsCodec
-      )
+      ) ++
+          (
+            if (!v.startsWith("2.10")) {
+              // in 2.11
+              //Boot.scala → HttpServer → eclipse
+              // eclipse → provided boohooo :'-(
+              Seq(
+                "org.eclipse.jetty" % "jetty-http"         % jettyVersion,
+                "org.eclipse.jetty" % "jetty-continuation" % jettyVersion,
+                "org.eclipse.jetty" % "jetty-servlet"      % jettyVersion,
+                "org.eclipse.jetty" % "jetty-util"         % jettyVersion,
+                "org.eclipse.jetty" % "jetty-security"     % jettyVersion,
+                "org.eclipse.jetty" % "jetty-plus"         % jettyVersion,
+                "org.eclipse.jetty" % "jetty-server"       % jettyVersion
+              )
+            } else Nil
+          )
       libs
     }
-  ) ++ repl ++ hive
+  ) ++ repl ++ hive ++ yarnWebProxy
 
   lazy val tachyonSettings: Seq[Def.Setting[_]] = {
     def tachyonVersion(

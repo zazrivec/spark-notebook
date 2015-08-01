@@ -4,7 +4,6 @@ import scala.util.Random
 import scala.xml.{NodeSeq, UnprefixedAttribute, Null}
 import play.api.libs.json._
 import play.api.libs.json.Json.JsValueWrapper
-import play.api.libs.json.Json.JsValueWrapper
 import notebook._
 import notebook.JsonCodec._
 import notebook.front.widgets.magic._

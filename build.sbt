@@ -6,9 +6,11 @@ name := "spark-notebook"
 
 scalaVersion := defaultScalaVersion
 
-version in ThisBuild := "0.6.0"
+version in ThisBuild := "0.6.1"
 
 maintainer := "Andy Petrella" //Docker
+
+net.virtualvoid.sbt.graph.Plugin.graphSettings
 
 enablePlugins(UniversalPlugin)
 
@@ -35,11 +37,10 @@ dockerCommands ++= Seq(
   Cmd("RUN", "/usr/bin/apt-get -y update --fix-missing"),
   Cmd("RUN", s"/usr/bin/apt-get -y install mesos=$mesosVersion-1.0.ubuntu1404"), //ubuntu 14.04 is base for java:latest → https://github.com/dockerfile/ubuntu/blob/master/Dockerfile
   Cmd("ENV", s"MESOS_JAVA_NATIVE_LIBRARY /usr/local/lib/libmesos-$mesosVersion.so"),
-  Cmd("ENV", s"MESOS_LOG_DIR /var/log/mesos"),
-  Cmd("USER", (daemonUser in Docker).value)
+  Cmd("ENV", s"MESOS_LOG_DIR /var/log/mesos")
 )
 
-dockerExposedVolumes ++= Seq("/opt/docker/notebooks", "/opt/docker/logs")
+dockerExposedVolumes ++= Seq("/opt/docker", "/opt/docker/notebooks", "/opt/docker/logs")
 
 dockerExposedPorts ++= Seq(9000, 9443) //Docker
 
@@ -65,7 +66,7 @@ resolvers in ThisBuild ++= Seq(
   "cloudera" at "https://repository.cloudera.com/artifactory/cloudera-repos",
   // docker
   "softprops-maven" at "http://dl.bintray.com/content/softprops/maven",
-  //spark 1.4
+  //spark 1.{n+1}.{m+1}
   "Apache Spark Prerelease" at "https://repository.apache.org/content/repositories/orgapachespark-1092/"
 )
 
@@ -129,6 +130,9 @@ lazy val sparkNotebook = project.in(file(".")).enablePlugins(play.PlayScala).ena
   .dependsOn(tachyon, subprocess, observable, common, spark, kernel)
   .settings(sharedSettings: _*)
   .settings(
+    bashScriptExtraDefines <+= (version, scalaBinaryVersion, scalaVersion, sparkVersion, hadoopVersion, withHive, withParquet) map { (v, sbv, sv, pv, hv, wh, wp) =>
+      """export ADD_JARS="${lib_dir}/$(ls ${lib_dir} | grep common.common | head)""""
+    },
     mappings in Universal ++= directory("notebooks"),
     version in Universal <<= (version in ThisBuild, scalaVersion, sparkVersion, hadoopVersion, withHive, withParquet) { (v, sc, sv, hv, h, p) =>
                                 s"$v-scala-$sc-spark-$sv-hadoop-$hv" + (if (h) "-with-hive" else "") + (if (p) "-with-parquet" else "")
@@ -140,7 +144,6 @@ lazy val sparkNotebook = project.in(file(".")).enablePlugins(play.PlayScala).ena
   .settings(initialCommands += ConsoleHelpers.cleanAllOutputs)
 
 lazy val subprocess = project.in(file("modules/subprocess"))
-  .settings(libraryDependencies ++= playDeps)
   .settings(
     libraryDependencies ++= {
       Seq(
@@ -158,32 +161,33 @@ lazy val subprocess = project.in(file("modules/subprocess"))
 
 lazy val observable = Project(id = "observable", base = file("modules/observable"))
   .dependsOn(subprocess)
+  .settings(libraryDependencies ++= playJson)
   .settings(
     libraryDependencies ++= Seq(
       akkaRemote,
       akkaSlf4j,
       slf4jLog4j,
-      rxScala
+      rxScala,
+      commonsCodec
     )
   )
   .settings(sharedSettings: _*)
 
 lazy val common = Project(id = "common", base = file("modules/common"))
   .dependsOn(observable)
+  .settings(libraryDependencies ++= playJson)
   .settings(
     version  <<= (version in ThisBuild, sparkVersion) { (v,sv) => s"_${v}_$sv" }
   )
   .settings(
     libraryDependencies ++= Seq(
       akka,
-      log4j,
-      scalaZ
+      log4j
     ),
     libraryDependencies ++= depsToDownloadDeps(scalaBinaryVersion.value, sbtVersion.value),
     // plotting functionality
     libraryDependencies ++= Seq(
-      bokeh,
-      wisp
+      bokeh
     ), // ++ customJacksonScala
     unmanagedSourceDirectories in Compile += (sourceDirectory in Compile).value / ("scala-" + scalaBinaryVersion.value),
     unmanagedSourceDirectories in Compile +=
@@ -191,6 +195,9 @@ lazy val common = Project(id = "common", base = file("modules/common"))
         case "1"::x::_ if x.toInt < 3 => "pre-df"
         case x                        => "post-df"
       }))
+  )
+  .settings(
+    wispSettings
   )
   .settings(sharedSettings: _*)
   .settings(sparkSettings: _*)

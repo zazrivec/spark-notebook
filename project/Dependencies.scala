@@ -13,20 +13,33 @@ object Dependencies {
       ExclusionRule("com.google.guava")
       )
   )
+  val playJson = Seq(
+    "com.typesafe.play" %% "play-json" % "2.3.7" withSources() excludeAll(
+      ExclusionRule("com.typesafe.akka"),
+      ExclusionRule("com.google.guava")
+      )
+  )
   val rxScala = "io.reactivex" %% "rxscala" % "0.22.0"
-  val scalaZ = "org.scalaz" %% "scalaz-core" % "7.0.6"
 
   val akkaVersion = "2.3.4-spark"
   val akka = "org.spark-project.akka" %% "akka-actor" % akkaVersion
   val akkaRemote = "org.spark-project.akka" %% "akka-remote" % akkaVersion
   val akkaSlf4j = "org.spark-project.akka" %% "akka-slf4j" % akkaVersion
 
-  val defaultScalaVersion = sys.props.getOrElse("scala.version", "2.10.4")
+  val scala_2_1X = "2\\.1([0-9])\\.[0-9]+".r
+  val spark_1_X = "1\\.([0-9]+)\\.([0-9]+)".r
+  val defaultSparkVersion = sys.props.getOrElse("spark.version", "1.4.1")
+  val defaultScalaVersion = sys.props.getOrElse("scala.version", "2.10.4") match {
+    case x@scala_2_1X("0") => x
+    case x@scala_2_1X("1") => defaultSparkVersion match {
+      case spark_1_X("4", "1") => "2.11.6"
+      case spark_1_X(_, _) => x
+    }
+  }
   val breeze = "org.scalanlp" %% "breeze" % "0.10" excludeAll(
     ExclusionRule("junit"),
     ExclusionRule("org.apache.commons", "commons-math3")
     )
-  val defaultSparkVersion = sys.props.getOrElse("spark.version", "1.4.0")
 
   def sparkCore(v: String) = "org.apache.spark" %% "spark-core" % v excludeAll(
     ExclusionRule("org.apache.hadoop"),
@@ -71,12 +84,17 @@ object Dependencies {
 
   val defaultHadoopVersion = sys.props.getOrElse("hadoop.version", "1.0.4")
 
-  def hadoopClient(
-    v: String) = "org.apache.hadoop" % "hadoop-client" % v excludeAll(
+  def hadoopClient(v: String) = "org.apache.hadoop" % "hadoop-client" % v excludeAll(
     ExclusionRule("org.apache.commons", "commons-exec"),
     ExclusionRule("commons-codec", "commons-codec"),
     ExclusionRule("com.google.guava", "guava")
-    )
+  )
+
+  def yarnProxy(v: String) = "org.apache.hadoop" % "hadoop-yarn-server-web-proxy" % v excludeAll(
+      ExclusionRule("org.apache.commons", "commons-exec"),
+      ExclusionRule("commons-codec", "commons-codec"),
+      ExclusionRule("com.google.guava", "guava")
+  )
 
   val defaultJets3tVersion = sys.props.getOrElse("jets3t.version", "0.7.1")
 
@@ -90,7 +108,7 @@ object Dependencies {
         case _ => defaultJets3tVersion
       }
     }
-    "net.java.dev.jets3t" % "jets3t" % v force()
+    "net.java.dev.jets3t" % "jets3t" % v force() excludeAll ExclusionRule()
   }
 
   val commonsIO = "org.apache.commons" % "commons-io" % "1.3.2"
@@ -126,9 +144,17 @@ object Dependencies {
 
   // Viz
   val bokeh = "io.continuum.bokeh" %% "bokeh" % "0.2"
-  val wisp = "com.quantifind" %% "wisp" % "0.0.2" excludeAll ExclusionRule("com.google.guava")
+  val wispDepSumac = "com.quantifind" %% "sumac" % "0.3.0"
+  //"com.quantifind" %% "wisp" % "0.0.4" excludeAll(
+  //  ExclusionRule("com.google.guava"),
+  //  ExclusionRule("org.json4s"),
+  //  ExclusionRule("net.databinder", "unfiltered-filter"),
+  //  ExclusionRule("net.databinder", "unfiltered-jetty"),
+  //  ExclusionRule("org.apache.commons", "commons-math3"),
+  //  ExclusionRule("commons-io", "commons-io")
+  //)
   // wisp deps on jackson-module-scala_2.10 v2.4 → guava v15
-  // but spark 1.2 → guava 14.0.1
+  // but spark → guava 14.0.1
   val customJacksonScala = Seq(
     "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.3.3" force() excludeAll ExclusionRule("com.google.guava"),
     "com.fasterxml.jackson.core" % "jackson-annotations" % "2.3.3" force() excludeAll ExclusionRule("com.google.guava"),
