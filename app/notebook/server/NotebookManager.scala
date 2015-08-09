@@ -55,7 +55,9 @@ class NotebookManager(val name: String, val notebookDir: File) {
     val sep = if (path.last == '/') "" else "/"
     val fpath = incrementFileName(path + sep + "Untitled")
     val nb = Notebook(
-      Some(new Metadata(getName(fpath),
+      Some(new Metadata(
+        name = getName(fpath),
+        sparkNotebook = Some(notebook.BuildInfo.toMap.mapValues(_.toString)),
         customLocalRepo = customLocalRepo,
         customRepos = customRepos,
         customDeps = customDeps,
@@ -76,7 +78,11 @@ class NotebookManager(val name: String, val notebookDir: File) {
       val newPath = incrementFileName(nb._4.dropRight(extension.length))
       val newName = getName(newPath)
       val oldNB = NBSerializer.read(nb._3)
-      save(newPath, Notebook(oldNB.metadata.map(_.copy(name = newName)), oldNB.cells, oldNB.worksheets, oldNB.autosaved, None), false)
+      save(
+        newPath,
+        Notebook(oldNB.metadata.map(_.copy(name = newName)), oldNB.cells, oldNB.worksheets, oldNB.autosaved, None),
+        false
+      )
       newPath
     } getOrElse newNotebook()
   }

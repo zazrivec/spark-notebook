@@ -98,14 +98,18 @@ object Deps extends java.io.Serializable {
     newJars
   }
 
-
-  def script(cp: String, resolvers: List[Resolver], repo: java.io.File): Try[List[String]] = {
-    //println(" -------------- DP --------------- ")
+  def parse(cp: String) = {
+      //println(" -------------- DP --------------- ")
     val lines = cp.trim().split("\n").toList.map(_.trim()).filter(_.length > 0).toSet.toSeq
     val includes = lines map Deps.parseInclude collect { case Some(x) => x }
     //println(includes)
     val excludes = lines map Deps.parseExclude collect { case Some(x) => x }
     //println(excludes)
+    (includes, excludes)
+  }
+
+  def script(cp: String, resolvers: List[Resolver], repo: java.io.File): Try[List[String]] = {
+    val (includes, excludes) = parse(cp)
 
     val tryDeps = Try {
       Deps.resolve(includes, excludes)(resolvers, repo)

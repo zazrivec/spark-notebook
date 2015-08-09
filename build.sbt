@@ -177,7 +177,7 @@ lazy val common = Project(id = "common", base = file("modules/common"))
   .dependsOn(observable)
   .settings(libraryDependencies ++= playJson)
   .settings(
-    version  <<= (version in ThisBuild, sparkVersion) { (v,sv) => s"_${v}_$sv" }
+    version  <<= (version in ThisBuild, sparkVersion) { (v,sv) => s"${v}_$sv" }
   )
   .settings(
     libraryDependencies ++= Seq(
@@ -204,7 +204,7 @@ lazy val common = Project(id = "common", base = file("modules/common"))
   .settings(buildInfoSettings: _*)
   .settings(
     sourceGenerators in Compile <+= buildInfo,
-    buildInfoKeys := Seq[BuildInfoKey](version, scalaVersion, sparkVersion, hadoopVersion, withHive, jets3tVersion, jlineDef, sbtVersion),
+    buildInfoKeys := Seq[BuildInfoKey](version in ThisBuild, scalaVersion, sparkVersion, hadoopVersion, withHive, withParquet, jets3tVersion, jlineDef, sbtVersion),
     buildInfoPackage := "notebook"
   )
 
@@ -212,7 +212,7 @@ lazy val common = Project(id = "common", base = file("modules/common"))
 lazy val spark = Project(id = "spark", base = file("modules/spark"))
   .dependsOn(common, subprocess, observable)
   .settings(
-    version  <<= (version in ThisBuild, sparkVersion) { (v,sv) => s"_${v}_$sv" }
+    version  <<= (version in ThisBuild, sparkVersion) { (v,sv) => s"${v}_$sv" }
   )
   .settings(
     libraryDependencies ++= Seq(

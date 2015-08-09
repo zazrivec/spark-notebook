@@ -138,6 +138,7 @@ object NBSerializer {
     auto_save_timestamp: Date = new Date(0),
     language_info: LanguageInfo = scala,
     trusted: Boolean = true,
+    sparkNotebook:Option[Map[String, String]] = None,
     customLocalRepo: Option[String] = None,
     customRepos: Option[List[String]] = None,
     customDeps: Option[List[String]] = None,
@@ -153,6 +154,7 @@ object NBSerializer {
         (JsPath \ "auto_save_timestamp").read[String].map(x => f.parse(x)) and
         (JsPath \ "language_info").readNullable[LanguageInfo].map(_.getOrElse(scala)) and
         (JsPath \ "trusted").readNullable[Boolean].map(_.getOrElse(true)) and
+        (JsPath \ "sparkNotebook").readNullable[Map[String, String]] and
         (JsPath \ "customLocalRepo").readNullable[String] and
         (JsPath \ "customRepos").readNullable[List[String]] and
         (JsPath \ "customDeps").readNullable[List[String]] and
@@ -173,6 +175,7 @@ object NBSerializer {
           "auto_save_timestamp" → auto_save_timestamp,
           "language_info" → language_info,
           "trusted" → trusted,
+          "sparkNotebook"→ m.sparkNotebook,
           "customLocalRepo" → m.customLocalRepo,
           "customRepos" → m.customRepos,
           "customDeps" → m.customDeps,
