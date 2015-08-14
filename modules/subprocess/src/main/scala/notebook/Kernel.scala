@@ -16,11 +16,10 @@ import scala.concurrent.duration._
  * accomplished by blocking on actor startup
  * to the remote (this is accomplished by blocking on startup waiting for
  */
-class Kernel(config: Config, system: ActorSystem, kernelId: String,
-  val notebookPath: Option[String] = None) {
+class Kernel(config: Config, system: ActorSystem, kernelId: String, val notebookPath: Option[String] = None) {
   implicit val executor = system.dispatcher
 
-  val router = system.actorOf(Props(new ExecutionManager))
+  val router = system.actorOf(Props(new ExecutionManager ))
 
   private val remoteDeployPromise = Promise[Deploy]()
 
@@ -33,6 +32,7 @@ class Kernel(config: Config, system: ActorSystem, kernelId: String,
   }
 
   class ExecutionManager extends Actor with ActorLogging {
+
     // These get filled in before we ever receive messages
     var remoteInfo: RemoteActorSystem = null
 

@@ -71,18 +71,18 @@ class CalcWebSocketService(
       val kInitScripts = initScripts
       val remoteDeploy = Await.result(remoteDeployFuture, 2 minutes)
 
-      calculator = context.actorOf {
-        Props(new ReplCalculator(
-          kNotebookName,
-          kCustomLocalRepo,
-          kCustomRepos,
-          kCustomDeps,
-          kCustomImports,
-          kCustomSparkConf,
-          kInitScripts,
-          kCompilerArgs)
-        ).withDeploy(remoteDeploy)
-      }
+      val props = Props.apply(classOf[ReplCalculator],
+                        kNotebookName,
+                        kCustomLocalRepo,
+                        kCustomRepos,
+                        kCustomDeps,
+                        kCustomImports,
+                        kCustomSparkConf,
+                        kInitScripts,
+                        kCompilerArgs
+                      ).withDeploy(remoteDeploy)
+
+      calculator = context.actorOf(props)
     }
 
     def receive = {

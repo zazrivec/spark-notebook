@@ -6,7 +6,7 @@ name := "spark-notebook"
 
 scalaVersion := defaultScalaVersion
 
-version in ThisBuild := "0.6.1"
+version in ThisBuild := "0.6.1-SNAPSHOT"
 
 maintainer := "Andy Petrella" //Docker
 

@@ -20,7 +20,7 @@ import scala.util.{Failure => TFailure, Success => TSuccess}
 class ReplCalculator(
   notebookName:String,
   customLocalRepo: Option[String],
-  customRepos: Option[List[String]], // List("mvn", "my-mvn % repo")
+  customRepos: Option[List[String]],
   customDeps: Option[List[String]],
   customImports: Option[List[String]],
   customSparkConf: Option[Map[String, String]],

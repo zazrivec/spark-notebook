@@ -5,6 +5,8 @@ import sbt._
 import scala.util.Try
 
 object Deps extends java.io.Serializable {
+  private val LOG = org.slf4j.LoggerFactory.getLogger(this.getClass);
+
   private val PATTERN_MODULEID_1 = """^([^%\s]+)\s*%\s*([^%\s]+)\s*%\s*([^%\s]+)$""".r
   private val PATTERN_MODULEID_2 = """^([^%\s]+)\s*%\s*([^%\s]+)\s*%\s*([^%\s]+)\s*%\s*([^%\s]+)$""".r
   private val PATTERN_COORDINATE_1 = """^([^:/]+)[:/]([^:]+):([^:]+)$""".r
@@ -45,8 +47,13 @@ object Deps extends java.io.Serializable {
 
   def resolve(includes: Seq[ModuleID], exclusions: Seq[ExclusionRule] = Nil)
       (implicit _resolvers: Seq[Resolver], repo: java.io.File) = {
-    val logger: ConsoleLogger = ConsoleLogger(scala.Console.out)
+    LOG.info("Resolving dependencies")
+    LOG.debug("> includes: " + includes)
+    LOG.debug("> exclusions: " + exclusions)
+    LOG.debug("> repo: " + repo.getPath)
     val resolvers = Resolver.file("local-repo", repo / "local")(Resolver.ivyStylePatterns) +: _resolvers
+    LOG.debug("> resolvers: " + resolvers)
+    val logger: ConsoleLogger = ConsoleLogger(scala.Console.out)
     val configuration: InlineIvyConfiguration = new InlineIvyConfiguration(
       new IvyPaths(repo.getParentFile, Some(repo)),
       resolvers, Nil, Nil, false, None, Nil, None,

@@ -225,9 +225,9 @@ object NBSerializer {
   implicit val notebookFormat = Json.format[Notebook]
 
   def fromJson(json: JsValue): Notebook = {
-    println("\r\n**************************************\r\n")
-    println(Json.prettyPrint(json))
-    println("**************************************\r\n")
+    Logger.info("\r\n**************************************\r\n")
+    Logger.info(Json.prettyPrint(json))
+    Logger.info("**************************************\r\n")
     json.validate[Notebook] match {
       case s: JsSuccess[Notebook] => {
         val notebook: Notebook = s.get
