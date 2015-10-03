@@ -62,6 +62,8 @@ resolvers in ThisBuild ++= Seq(
   "cloudera" at "https://repository.cloudera.com/artifactory/cloudera-repos",
   // docker
   "softprops-maven" at "http://dl.bintray.com/content/softprops/maven",
+  // apache release repo
+  "apache-releases" at "https://repository.apache.org/content/repositories/releases",
   //spark cutting edge
   "spark 1.5.0-rc2" at "https://repository.apache.org/content/repositories/orgapachespark-1141"
 )
