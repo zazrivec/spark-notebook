@@ -25,6 +25,8 @@ define([
      * @param {string} name - the kernel type (e.g. python3)
      */
     var Kernel = function (kernel_service_url, base_url, ws_url, notebook, name) {
+        this.notebook = notebook;
+
         this.events = notebook.events;
 
         this.id = null;
@@ -319,6 +321,7 @@ define([
             processData: false,
             cache: false,
             type: "POST",
+            data: JSON.stringify({notebook_path: that.notebook.notebook_path}),
             dataType: "json",
             success: this._on_success(on_success),
             error: this._on_error(on_error)
@@ -950,8 +953,14 @@ define([
             }
         }
 
+        var st = "";
+        if (!_.isEmpty(msg.content.thrown)) {
+            st = ". Stacktrace:\n" + msg.content.thrown.join("\n")
+        }
         // hide in console using filter: ^[^(?:Server log>)]
-        console[msg.content.level.toLowerCase()]("Server log> ["+new Date(msg.content.time_stamp)+"] [" + msg.content.logger_name + "] " + msg.content.message);
+        console[msg.content.level.toLowerCase()](
+            "Server log> ["+new Date(msg.content.time_stamp)+"] [" + msg.content.logger_name + "] " + msg.content.message + st
+        );
     };
 
     /**
