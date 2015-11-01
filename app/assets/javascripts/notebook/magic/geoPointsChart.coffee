@@ -10,31 +10,6 @@ define([
     w = options.width||600
     h = options.height||400
 
-    count = d3.select(container).append("p")
-    count .selectAll("span .nrow")
-          .data([options.nrow])
-          .enter()
-          .append("span")
-          .attr("class", "nrow")
-            .text( (d) ->
-              d + " items"
-            )
-    displayShown = (c) =>
-      shown = count.selectAll("span.shown")
-                    .data([c])
-      shown.remove()
-      shown.enter()
-            .append("span")
-            .attr("class", "shown")
-            .attr("style", "color: red")
-            .text( (d) ->
-              if options.nrow > d
-                "(showing " +  d + ")"
-              else
-                ""
-            )
-    displayShown(options.shown)
-
     mapId = "map"+@genId
     mapDiv = $(container).append("div").css("width", w+"px").css("height", h+"px").attr("id", mapId)
 
@@ -84,7 +59,6 @@ define([
     updatePoints(@dataInit)
 
     dataO.subscribe( (newData) =>
-      displayShown(newData.length)
       _.each(map._layers, (l) ->
         map.removeLayer(l) if l instanceof L.Marker
       )

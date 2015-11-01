@@ -58,10 +58,17 @@ package object widgets {
       )}</p>)
   }
 
-  def ul(capacity:Int=10) = new DataConnectedWidget[String] {
+  def ul(capacity:Int=10, initData:Seq[String]=Nil, prefill:Option[String]=None) = new DataConnectedWidget[String] {
     implicit val singleCodec:Codec[JsValue, String] = JsonCodec.strings
 
-    var data = Seq.empty[String]
+    var data = (initData.size, prefill) match {
+      case (0, None) => Seq.empty[String]
+      case (x, None) => initData
+      case (0, Some(i)) => Seq.fill(capacity)(i)
+      case (x, Some(i)) => initData.padTo(capacity, i)
+    }
+
+    apply(data)
 
     lazy val toHtml = <ul data-bind="foreach: value">
       <li data-bind="text: $data"></li>{
@@ -245,7 +252,7 @@ package object widgets {
     def computeData(pts:Seq[MagicRenderPoint] = points) = pts.map(_.data.toSeq)
     override val data:Seq[Seq[(String, Any)]] = computeData()
 
-    val maxPointsBox = new InputBox[Int](maxPoints, "Max Points")
+    val maxPointsBox = new InputBox[Int](maxPoints, "Max Points (controlling all tabs)")
 
     maxPointsBox.currentData --> Connection.fromObserver { max:Int =>
       pages foreach { case (s, w) =>
@@ -308,12 +315,20 @@ package object widgets {
     val maxPointsBox = new InputBox[Int](maxPoints, "Max Points")
     def sizes:(Int, Int)=(600, 400)
 
+    lazy val nrow = out
+    lazy val warnMax = out
+
     @volatile var currentC = originalData
     @volatile var currentPoints = points
     @volatile var currentMax = maxPoints
 
     maxPointsBox.currentData --> Connection.fromObserver { max:Int =>
       currentMax = max
+      if (currentMax >= toPoints.count(currentC)) {
+        warnMax("")
+      } else{
+        warnMax(" (showing "+currentMax + ")")
+      }
       applyOn(currentC)
     }
 
@@ -322,6 +337,11 @@ package object widgets {
       maxPointsBox.currentData <-- Connection.just(max)
       //update state
       currentMax = max
+      if (currentMax >= toPoints.count(currentC)) {
+        warnMax("")
+      } else{
+        warnMax(" (showing "+currentMax + ")")
+      }
       applyOn(currentC)
     }
 
@@ -329,13 +349,16 @@ package object widgets {
       currentC = newData
       currentPoints = toPoints(newData, currentMax)
       val d = currentPoints map mToSeq
+      nrow(toPoints.count(currentC)+ " points")
       this.apply(d)
       d
     }
 
+    //val log = org.slf4j.LoggerFactory.getLogger("Chart")
     def addAndApply(otherData:C) = apply {
       currentC = toPoints.append(currentC, otherData)
-      currentPoints = currentPoints ++ toPoints(otherData, currentMax)
+      currentPoints = toPoints(currentC, currentMax)
+      nrow(toPoints.count(currentC)+ " points")
       val d =  currentPoints map mToSeq
       this.apply(d)
       d
@@ -357,6 +380,9 @@ package object widgets {
         {
           maxPointsBox.toHtml
         }
+        {nrow.toHtml} <span style="color:red">{warnMax.toHtml}</span>
+        <div>
+        </div>
       </div>
       extendedContent.map(c => container.copy(child = container.child ++ c)).getOrElse(container)
     }
@@ -383,7 +409,6 @@ package object widgets {
 
     override val scripts = List(Script( "magic/scatterChart",
                                         Json.obj( "x" → f1.toString, "y" → f2.toString,
-                                                  "nrow" → toPoints.count(originalData), "shown" → points.size,
                                                   "width" → sizes._1, "height" → sizes._2)))
   }
 
@@ -398,7 +423,6 @@ package object widgets {
 
     override val scripts = List(Script( "magic/lineChart",
                                         Json.obj( "x" → f1.toString, "y" → f2.toString,
-                                                  "nrow" → toPoints.count(originalData), "shown" → points.size,
                                                   "width" → sizes._1, "height" → sizes._2)))
   }
 
@@ -412,7 +436,6 @@ package object widgets {
 
     override val scripts = List(Script( "magic/barChart",
                                         Json.obj( "x" → f1.toString, "y" → f2.toString,
-                                                  "nrow" → toPoints.count(originalData), "shown" → points.size,
                                                   "width" → sizes._1, "height" → sizes._2)))
   }
 
@@ -426,7 +449,6 @@ package object widgets {
 
     override val scripts = List(Script( "magic/pieChart",
                                         Json.obj("series" → f1.toString, "p" → f2.toString,
-                                                  "nrow" → toPoints.count(originalData), "shown" → points.size,
                                                   "width" → sizes._1, "height" → sizes._2)))
   }
 
@@ -457,7 +479,6 @@ package object widgets {
         Json.obj(
                   "lat" → latLong._1, "lon" → latLong._2,
                   "width" → sizes._1, "height" → sizes._2,
-                  "nrow" → toPoints.count(originalData), "shown" → points.size,
                   "rField" → rField, "colorField" → colorField
                   /*, "proj" → proj, "baseMap" → baseMap*/
                 )
@@ -472,7 +493,6 @@ package object widgets {
 
     val opts = Json.obj("headers" → headers, "width" → sizes._1,
                         "height" → sizes._2, "charge" → charge, "linkDistance" → linkDistance,
-                        "nrow" → toPoints.count(originalData), "shown" → points.size,
                         "linkStrength" → linkStrength)
 
     override val scripts = List(Script("magic/graphChart", opts))
@@ -483,7 +503,6 @@ package object widgets {
 
     override val scripts = List(Script( "magic/diyChart",
                                         Json.obj( "js" → s"var js = $js;", "headers" → headers,
-                                                  "nrow" → toPoints.count(originalData), "shown" → points.size,
                                                   "width" → sizes._1, "height" → sizes._2)))
   }
 
@@ -494,7 +513,6 @@ package object widgets {
     val h:Seq[String] = filterCol.getOrElse(headers)
     override val scripts = List(Script( "magic/tableChart",
                                         Json.obj( "headers" → h,
-                                                  "nrow" → toPoints.count(originalData), "shown" → points.size,
                                                   "width" → sizes._1, "height" → sizes._2)))
   }
 
